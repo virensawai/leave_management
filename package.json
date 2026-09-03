@@ -1,0 +1,20 @@
+{
+  "name": "college-leave-management-system",
+  "version": "1.0.0",
+  "description": "Production-quality College Student Leave Management System built with React, Vite, Express, and MySQL.",
+  "scripts": {
+    "setup:db": "cd server && node setup-db.js",
+    "server": "cd server && npm run dev",
+    "client": "cd client && npm run dev",
+    "test:api": "node test-api.js"
+  },
+  "keywords": [
+    "leave-management",
+    "react",
+    "vite",
+    "express",
+    "mysql"
+  ],
+  "author": "",
+  "license": "ISC"
+}
