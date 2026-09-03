@@ -35,14 +35,14 @@ async function findById(id) {
 async function findByStudentId(studentId, { page = 1, limit = 10 } = {}) {
   const offset = (page - 1) * limit;
 
-  const [rows] = await pool.execute(
+  const [rows] = await pool.query(
     `SELECT la.id, la.leave_type, la.from_date, la.to_date, la.reason,
             la.status, la.rejection_reason, la.created_at
      FROM leave_applications la
      WHERE la.student_id = ?
      ORDER BY la.created_at DESC
      LIMIT ? OFFSET ?`,
-    [studentId, String(limit), String(offset)]
+    [studentId, Number(limit), Number(offset)]
   );
 
   const [countResult] = await pool.execute(
@@ -157,7 +157,7 @@ async function findAll({ page = 1, limit = 10, status, leaveType, section, searc
     ${whereClause}
   `;
 
-  const [rows] = await pool.execute(query, [...params, String(limit), String(offset)]);
+  const [rows] = await pool.query(query, [...params, Number(limit), Number(offset)]);
   const [countResult] = await pool.execute(countQuery, params);
 
   return {
