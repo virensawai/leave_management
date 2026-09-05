@@ -1,10 +1,12 @@
 import React, { useEffect, useState } from 'react';
+import { useAuth } from '../../context/AuthContext';
 import { hodAPI } from '../../services/api';
 import { getErrorMessage } from '../../utils/helpers';
 import Spinner from '../../components/common/Spinner';
 import EmptyState from '../../components/common/EmptyState';
 
 export default function HodStudentList() {
+  const { user } = useAuth();
   const [students, setStudents] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
@@ -45,8 +47,17 @@ export default function HodStudentList() {
   return (
     <div className="page-container">
       <div className="mb-6">
-        <h1 className="page-title">Students Directory</h1>
-        <p className="page-subtitle mb-0">View all registered students across departments and sections.</p>
+        <div className="flex items-center gap-2.5 mb-1 flex-wrap">
+          <h1 className="page-title mb-0">Students Directory</h1>
+          {user?.department && (
+            <span className="px-2.5 py-0.5 rounded-full text-xs font-bold bg-indigo-50 text-indigo-700 border border-indigo-200 uppercase tracking-wide font-mono">
+              {user.department}
+            </span>
+          )}
+        </div>
+        <p className="page-subtitle mb-0">
+          View all registered students in <span className="font-semibold text-slate-700">{user?.department ? `${user.department} Department` : 'your department'}</span>.
+        </p>
       </div>
 
       {error && <div className="alert alert-error mb-6">{error}</div>}

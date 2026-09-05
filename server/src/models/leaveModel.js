@@ -78,18 +78,24 @@ async function getStudentStats(studentId) {
 }
 
 /**
- * Get overall leave statistics (for HOD).
+ * Get overall leave statistics (for HOD, optionally filtered by department).
  */
-async function getAllStats() {
-  const [rows] = await pool.execute(
-    `SELECT
-       COUNT(*) AS total,
-       SUM(status = 'pending') AS pending,
-       SUM(status = 'approved') AS approved,
-       SUM(status = 'rejected') AS rejected,
-       SUM(status = 'cancelled') AS cancelled
-     FROM leave_applications`
-  );
+async function getAllStats(department) {
+  let query = `
+    SELECT
+      COUNT(*) AS total,
+      SUM(la.status = 'pending') AS pending,
+      SUM(la.status = 'approved') AS approved,
+      SUM(la.status = 'rejected') AS rejected,
+      SUM(la.status = 'cancelled') AS cancelled
+    FROM leave_applications la
+  `;
+  const params = [];
+  if (department) {
+    query += ` JOIN students s ON la.student_id = s.id WHERE s.department = ?`;
+    params.push(department);
+  }
+  const [rows] = await pool.execute(query, params);
   return rows[0];
 }
 
@@ -97,10 +103,15 @@ async function getAllStats() {
  * Find all leave applications with filters (for HOD).
  * All filtering is done server-side with parameterized queries.
  */
-async function findAll({ page = 1, limit = 10, status, leaveType, section, search, fromDate, toDate } = {}) {
+async function findAll({ page = 1, limit = 10, department, status, leaveType, section, search, fromDate, toDate } = {}) {
   const offset = (page - 1) * limit;
   const conditions = [];
   const params = [];
+
+  if (department) {
+    conditions.push('s.department = ?');
+    params.push(department);
+  }
 
   if (status) {
     conditions.push('la.status = ?');
@@ -138,7 +149,7 @@ async function findAll({ page = 1, limit = 10, status, leaveType, section, searc
   const query = `
     SELECT la.id, la.leave_type, la.from_date, la.to_date, la.reason,
            la.status, la.rejection_reason, la.created_at,
-           u.name AS student_name, s.roll_no, s.section
+           u.name AS student_name, s.roll_no, s.section, s.department
     FROM leave_applications la
     JOIN students s ON la.student_id = s.id
     JOIN users u ON s.user_id = u.id

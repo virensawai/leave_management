@@ -107,7 +107,9 @@ export default function Sidebar({ isOpen, setIsOpen }) {
             <div>
               <h1 className="font-bold text-base leading-none text-white tracking-tight">LeaveEase</h1>
               <span className="text-[10px] text-slate-400 font-semibold uppercase tracking-wider block mt-1">
-                {user?.role === 'hod' ? 'HOD Portal' : 'Student Portal'}
+                {user?.role === 'hod'
+                  ? `HOD • ${user?.department || 'Portal'}`
+                  : (user?.department ? `Student • ${user.department}` : 'Student Portal')}
               </span>
             </div>
           </div>

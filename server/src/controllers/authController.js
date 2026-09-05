@@ -29,6 +29,7 @@ async function register(req, res, next) {
       email,
       passwordHash,
       role: 'student',
+      department,
     });
 
     // Create student profile
@@ -42,14 +43,14 @@ async function register(req, res, next) {
 
     // Generate JWT
     const token = jwt.sign(
-      { userId, role: 'student' },
+      { userId, role: 'student', department },
       process.env.JWT_SECRET,
       { expiresIn: process.env.JWT_EXPIRES_IN || '24h' }
     );
 
     return success(res, 'Registration successful', {
       token,
-      user: { id: userId, name, email, role: 'student' },
+      user: { id: userId, name, email, role: 'student', department },
     }, 201);
   } catch (err) {
     next(err);
@@ -78,14 +79,14 @@ async function login(req, res, next) {
 
     // Generate JWT
     const token = jwt.sign(
-      { userId: user.id, role: user.role },
+      { userId: user.id, role: user.role, department: user.department },
       process.env.JWT_SECRET,
       { expiresIn: process.env.JWT_EXPIRES_IN || '24h' }
     );
 
     return success(res, 'Login successful', {
       token,
-      user: { id: user.id, name: user.name, email: user.email, role: user.role },
+      user: { id: user.id, name: user.name, email: user.email, role: user.role, department: user.department },
     });
   } catch (err) {
     next(err);
@@ -114,6 +115,7 @@ async function getMe(req, res, next) {
         name: user.name,
         email: user.email,
         role: user.role,
+        department: user.department,
         created_at: user.created_at,
       },
       student: studentProfile

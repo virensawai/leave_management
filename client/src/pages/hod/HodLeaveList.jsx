@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { Link, useSearchParams } from 'react-router-dom';
+import { useAuth } from '../../context/AuthContext';
 import { hodAPI } from '../../services/api';
 import { formatDate, getLeaveTypeLabel, getErrorMessage } from '../../utils/helpers';
 import { LEAVE_TYPES, STATUS_OPTIONS, SECTION_OPTIONS } from '../../utils/constants';
@@ -9,6 +10,7 @@ import EmptyState from '../../components/common/EmptyState';
 import Modal from '../../components/common/Modal';
 
 export default function HodLeaveList() {
+  const { user } = useAuth();
   const [searchParams] = useSearchParams();
 
   // Filters state initialized from URL search params if present
@@ -123,8 +125,17 @@ export default function HodLeaveList() {
   return (
     <div className="page-container">
       <div className="mb-6">
-        <h1 className="page-title">Leave Applications Directory</h1>
-        <p className="page-subtitle mb-0">Search, filter, review, and process all student leave requests.</p>
+        <div className="flex items-center gap-2.5 mb-1 flex-wrap">
+          <h1 className="page-title mb-0">Leave Applications Directory</h1>
+          {user?.department && (
+            <span className="px-2.5 py-0.5 rounded-full text-xs font-bold bg-indigo-50 text-indigo-700 border border-indigo-200 uppercase tracking-wide font-mono">
+              {user.department}
+            </span>
+          )}
+        </div>
+        <p className="page-subtitle mb-0">
+          Review, filter, and process leave applications submitted by students of <span className="font-semibold text-slate-700">{user?.department ? `${user.department} Department` : 'your department'}</span>.
+        </p>
       </div>
 
       {successMessage && (

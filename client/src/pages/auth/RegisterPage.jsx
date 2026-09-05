@@ -4,13 +4,15 @@ import { useAuth } from '../../context/AuthContext';
 import { getErrorMessage } from '../../utils/helpers';
 
 export default function RegisterPage() {
+  const BRANCHES = ['CSE', 'CSE(AIML)', 'AIDS', 'EXTC', 'EE', 'ME', 'CIVIL'];
+
   const [formData, setFormData] = useState({
     name: '',
     email: '',
     password: '',
     roll_no: '',
     section: 'A',
-    department: 'Computer Science',
+    department: 'CSE',
     semester: 4,
   });
   const [error, setError] = useState('');
@@ -160,16 +162,18 @@ export default function RegisterPage() {
           </div>
 
           <div className="form-group mb-4">
-            <label className="form-label" htmlFor="department">Department</label>
-            <input
+            <label className="form-label" htmlFor="department">Department / Branch</label>
+            <select
               id="department"
               name="department"
-              type="text"
-              required
-              className="form-input"
+              className="form-select"
               value={formData.department}
               onChange={handleChange}
-            />
+            >
+              {BRANCHES.map((b) => (
+                <option key={b} value={b}>{b}</option>
+              ))}
+            </select>
           </div>
 
           <button

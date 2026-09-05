@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
+import { useAuth } from '../../context/AuthContext';
 import { hodAPI } from '../../services/api';
 import { formatDate, getLeaveTypeLabel, getErrorMessage } from '../../utils/helpers';
 import Spinner from '../../components/common/Spinner';
@@ -7,6 +8,7 @@ import EmptyState from '../../components/common/EmptyState';
 import Modal from '../../components/common/Modal';
 
 export default function HodDashboard() {
+  const { user } = useAuth();
   const [stats, setStats] = useState({});
   const [pendingLeaves, setPendingLeaves] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -79,8 +81,17 @@ export default function HodDashboard() {
     <div className="page-container">
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-8">
         <div>
-          <h1 className="page-title">HOD Administration Dashboard</h1>
-          <p className="page-subtitle mb-0">Overview of student leave applications and pending actions.</p>
+          <div className="flex items-center gap-2.5 mb-1 flex-wrap">
+            <h1 className="page-title mb-0">HOD Administration Dashboard</h1>
+            {user?.department && (
+              <span className="px-2.5 py-0.5 rounded-full text-xs font-bold bg-indigo-50 text-indigo-700 border border-indigo-200 uppercase tracking-wide font-mono">
+                {user.department}
+              </span>
+            )}
+          </div>
+          <p className="page-subtitle mb-0">
+            Overview of student leave applications and pending actions for <span className="font-semibold text-slate-700">{user?.department ? `${user.department} Department` : 'your department'}</span>.
+          </p>
         </div>
         <Link to="/hod/leaves" className="btn btn-primary self-start sm:self-auto cursor-pointer">
           <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">

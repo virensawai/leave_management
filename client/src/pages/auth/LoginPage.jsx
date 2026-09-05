@@ -35,14 +35,19 @@ export default function LoginPage() {
     }
   };
 
-  const setDemoCredentials = (role) => {
-    if (role === 'hod') {
-      setEmail('hod@college.local');
-      setPassword('Admin@123');
-    } else {
-      setEmail('aarav@college.local');
-      setPassword('Student@123');
-    }
+  const BRANCH_HODS = [
+    { label: 'CSE HOD (Dr. Sharma)', email: 'hod.cse@college.local' },
+    { label: 'CSE(AIML) HOD (Dr. Patil)', email: 'hod.aiml@college.local' },
+    { label: 'AIDS HOD (Dr. Deshmukh)', email: 'hod.aids@college.local' },
+    { label: 'EXTC HOD (Dr. Kulkarni)', email: 'hod.extc@college.local' },
+    { label: 'EE HOD (Dr. Verma)', email: 'hod.ee@college.local' },
+    { label: 'ME HOD (Dr. Shinde)', email: 'hod.me@college.local' },
+    { label: 'CIVIL HOD (Dr. Joshi)', email: 'hod.civil@college.local' },
+  ];
+
+  const setDemoCredentials = (userEmail, userPassword) => {
+    setEmail(userEmail);
+    setPassword(userPassword);
     setError('');
   };
 
@@ -107,21 +112,39 @@ export default function LoginPage() {
           <p className="text-[11px] font-semibold uppercase tracking-wider text-slate-400 text-center mb-3">
             Quick Fill Demo Accounts
           </p>
-          <div className="grid grid-cols-2 gap-2.5">
-            <button
-              type="button"
-              onClick={() => setDemoCredentials('student')}
-              className="btn btn-outline btn-sm text-xs py-2"
-            >
-              Demo Student
-            </button>
-            <button
-              type="button"
-              onClick={() => setDemoCredentials('hod')}
-              className="btn btn-outline btn-sm text-xs py-2"
-            >
-              Demo HOD
-            </button>
+          <div className="space-y-2.5">
+            <div className="grid grid-cols-2 gap-2">
+              <button
+                type="button"
+                onClick={() => setDemoCredentials('aarav@college.local', 'Student@123')}
+                className="btn btn-outline btn-sm text-xs py-2"
+              >
+                Student (CSE)
+              </button>
+              <button
+                type="button"
+                onClick={() => setDemoCredentials('tanvi.aiml@college.local', 'Student@123')}
+                className="btn btn-outline btn-sm text-xs py-2"
+              >
+                Student (AIML)
+              </button>
+            </div>
+            <div>
+              <select
+                className="form-select text-xs py-2 w-full text-slate-700 bg-slate-50 cursor-pointer"
+                defaultValue=""
+                onChange={(e) => {
+                  if (e.target.value) {
+                    setDemoCredentials(e.target.value, 'Admin@123');
+                  }
+                }}
+              >
+                <option value="" disabled>⚡ Fill Branch HOD Account...</option>
+                {BRANCH_HODS.map((h) => (
+                  <option key={h.email} value={h.email}>{h.label}</option>
+                ))}
+              </select>
+            </div>
           </div>
         </div>
 

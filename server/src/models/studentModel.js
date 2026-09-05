@@ -42,16 +42,23 @@ async function findById(studentId) {
 }
 
 /**
- * Get all students with user info (for HOD).
+ * Get all students with user info (optionally filtered by department).
  */
-async function findAll() {
-  const [rows] = await pool.execute(
-    `SELECT s.id, s.user_id, s.roll_no, s.section, s.department, s.semester,
-            u.name, u.email
-     FROM students s
-     JOIN users u ON s.user_id = u.id
-     ORDER BY s.roll_no ASC`
-  );
+async function findAll(department) {
+  let query = `
+    SELECT s.id, s.user_id, s.roll_no, s.section, s.department, s.semester,
+           u.name, u.email
+    FROM students s
+    JOIN users u ON s.user_id = u.id
+  `;
+  const params = [];
+  if (department) {
+    query += ' WHERE s.department = ?';
+    params.push(department);
+  }
+  query += ' ORDER BY s.roll_no ASC';
+
+  const [rows] = await pool.execute(query, params);
   return rows;
 }
 

@@ -23,8 +23,8 @@ export default function Header({ setIsSidebarOpen }) {
 
       <div className="flex items-center gap-3">
         <div className="flex items-center gap-2.5">
-          <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold bg-indigo-50 text-indigo-700 border border-indigo-200 uppercase tracking-wider">
-            {user?.role === 'hod' ? 'HOD' : 'Student'}
+          <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold bg-indigo-50 text-indigo-700 border border-indigo-200 tracking-wider font-mono">
+            {user?.role === 'hod' ? (user?.department ? `HOD • ${user.department}` : 'HOD') : 'Student'}
           </span>
           <span className="text-sm font-semibold text-gray-800 hidden sm:inline">
             {user?.name}

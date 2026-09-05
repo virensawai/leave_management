@@ -8,7 +8,7 @@ const { success, error } = require('../utils/response');
  */
 async function getDashboard(req, res, next) {
   try {
-    const stats = await leaveModel.getAllStats();
+    const stats = await leaveModel.getAllStats(req.user.department);
 
     return success(res, 'HOD dashboard data retrieved', {
       stats: {
@@ -17,6 +17,7 @@ async function getDashboard(req, res, next) {
         approved: Number(stats.approved) || 0,
         rejected: Number(stats.rejected) || 0,
       },
+      department: req.user.department,
     });
   } catch (err) {
     next(err);
@@ -26,7 +27,7 @@ async function getDashboard(req, res, next) {
 /**
  * GET /api/hod/leaves
  * Get all leave applications with filters, search, and pagination.
- * All filtering is performed server-side.
+ * All filtering is performed server-side and filtered by HOD department.
  */
 async function getLeaves(req, res, next) {
   try {
@@ -42,6 +43,7 @@ async function getLeaves(req, res, next) {
     } = req.query;
 
     const result = await leaveModel.findAll({
+      department: req.user.department,
       page: parseInt(page, 10),
       limit: parseInt(limit, 10),
       status,
@@ -52,7 +54,10 @@ async function getLeaves(req, res, next) {
       toDate: to_date,
     });
 
-    return success(res, 'Leave applications retrieved', result);
+    return success(res, 'Leave applications retrieved', {
+      ...result,
+      department: req.user.department,
+    });
   } catch (err) {
     next(err);
   }
@@ -72,6 +77,16 @@ async function getLeaveDetail(req, res, next) {
     const leave = await leaveModel.findById(leaveId);
     if (!leave) {
       return error(res, 'Leave application not found', 'NOT_FOUND', 404);
+    }
+
+    // Enforce department authorization
+    if (req.user.department && leave.department !== req.user.department) {
+      return error(
+        res,
+        'You do not have permission to view leave applications for another department',
+        'FORBIDDEN',
+        403
+      );
     }
 
     return success(res, 'Leave application retrieved', { leave });
@@ -94,6 +109,16 @@ async function approveLeave(req, res, next) {
     const leave = await leaveModel.findById(leaveId);
     if (!leave) {
       return error(res, 'Leave application not found', 'NOT_FOUND', 404);
+    }
+
+    // Enforce department authorization
+    if (req.user.department && leave.department !== req.user.department) {
+      return error(
+        res,
+        'You do not have permission to approve leaves for another department',
+        'FORBIDDEN',
+        403
+      );
     }
 
     if (leave.status !== 'pending') {
@@ -132,6 +157,16 @@ async function rejectLeave(req, res, next) {
       return error(res, 'Leave application not found', 'NOT_FOUND', 404);
     }
 
+    // Enforce department authorization
+    if (req.user.department && leave.department !== req.user.department) {
+      return error(
+        res,
+        'You do not have permission to reject leaves for another department',
+        'FORBIDDEN',
+        403
+      );
+    }
+
     if (leave.status !== 'pending') {
       return error(
         res,
@@ -156,12 +191,15 @@ async function rejectLeave(req, res, next) {
 
 /**
  * GET /api/hod/students
- * Get all students list.
+ * Get all students list for the HOD's department.
  */
 async function getStudents(req, res, next) {
   try {
-    const students = await studentModel.findAll();
-    return success(res, 'Students retrieved', { students });
+    const students = await studentModel.findAll(req.user.department);
+    return success(res, 'Students retrieved', {
+      students,
+      department: req.user.department,
+    });
   } catch (err) {
     next(err);
   }

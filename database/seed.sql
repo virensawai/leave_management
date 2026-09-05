@@ -3,12 +3,19 @@
 -- Seed Data (Development Only)
 -- =====================================================
 -- Demo Credentials:
---   HOD:     hod@college.local     / Admin@123
---   Students: aarav@college.local  / Student@123
---             priya@college.local  / Student@123
---             rahul@college.local  / Student@123
---             ananya@college.local / Student@123
---             vikram@college.local / Student@123
+--   HODs (Password: Admin@123):
+--     CSE:       hod.cse@college.local (also hod@college.local)
+--     CSE(AIML): hod.aiml@college.local
+--     AIDS:      hod.aids@college.local
+--     EXTC:      hod.extc@college.local
+--     EE:        hod.ee@college.local
+--     ME:        hod.me@college.local
+--     CIVIL:     hod.civil@college.local
+--   Students (Password: Student@123):
+--     aarav@college.local (CSE)
+--     priya@college.local (CSE)
+--     tanvi.aiml@college.local (CSE(AIML))
+--     kunal.aids@college.local (AIDS)
 -- =====================================================
 
 USE leave_management;
@@ -17,28 +24,39 @@ USE leave_management;
 -- Insert Users (INSERT IGNORE prevents duplicate error)
 -- =====================================================
 
--- HOD user
-INSERT IGNORE INTO users (name, email, password_hash, role) VALUES
-('Dr. Sharma', 'hod@college.local', '$2b$10$AQGzikDXfm5JBVxJdx8IhOtGptcSY.uauUxkzrMTQYlnbKPZF6nz2', 'hod');
+-- Branch HOD users
+INSERT IGNORE INTO users (name, email, password_hash, role, department) VALUES
+('Dr. Rajesh Sharma', 'hod.cse@college.local',   '$2b$10$AQGzikDXfm5JBVxJdx8IhOtGptcSY.uauUxkzrMTQYlnbKPZF6nz2', 'hod', 'CSE'),
+('Dr. Rajesh Sharma', 'hod@college.local',       '$2b$10$AQGzikDXfm5JBVxJdx8IhOtGptcSY.uauUxkzrMTQYlnbKPZF6nz2', 'hod', 'CSE'),
+('Dr. Sunita Patil',  'hod.aiml@college.local',  '$2b$10$AQGzikDXfm5JBVxJdx8IhOtGptcSY.uauUxkzrMTQYlnbKPZF6nz2', 'hod', 'CSE(AIML)'),
+('Dr. Amit Deshmukh', 'hod.aids@college.local',  '$2b$10$AQGzikDXfm5JBVxJdx8IhOtGptcSY.uauUxkzrMTQYlnbKPZF6nz2', 'hod', 'AIDS'),
+('Dr. Snehal Kulkarni','hod.extc@college.local', '$2b$10$AQGzikDXfm5JBVxJdx8IhOtGptcSY.uauUxkzrMTQYlnbKPZF6nz2', 'hod', 'EXTC'),
+('Dr. Manoj Verma',   'hod.ee@college.local',    '$2b$10$AQGzikDXfm5JBVxJdx8IhOtGptcSY.uauUxkzrMTQYlnbKPZF6nz2', 'hod', 'EE'),
+('Dr. Vikram Shinde', 'hod.me@college.local',    '$2b$10$AQGzikDXfm5JBVxJdx8IhOtGptcSY.uauUxkzrMTQYlnbKPZF6nz2', 'hod', 'ME'),
+('Dr. Priya Joshi',   'hod.civil@college.local', '$2b$10$AQGzikDXfm5JBVxJdx8IhOtGptcSY.uauUxkzrMTQYlnbKPZF6nz2', 'hod', 'CIVIL');
 
 -- Student users
-INSERT IGNORE INTO users (name, email, password_hash, role) VALUES
-('Aarav Patel',   'aarav@college.local',  '$2b$10$PwZW.jyRw1ox7MgXCezwWeoVvEOKCykxVc.wpUNhqlSzGX23ZTmpq', 'student'),
-('Priya Singh',   'priya@college.local',  '$2b$10$PwZW.jyRw1ox7MgXCezwWeoVvEOKCykxVc.wpUNhqlSzGX23ZTmpq', 'student'),
-('Rahul Kumar',   'rahul@college.local',  '$2b$10$PwZW.jyRw1ox7MgXCezwWeoVvEOKCykxVc.wpUNhqlSzGX23ZTmpq', 'student'),
-('Ananya Reddy',  'ananya@college.local', '$2b$10$PwZW.jyRw1ox7MgXCezwWeoVvEOKCykxVc.wpUNhqlSzGX23ZTmpq', 'student'),
-('Vikram Joshi',  'vikram@college.local', '$2b$10$PwZW.jyRw1ox7MgXCezwWeoVvEOKCykxVc.wpUNhqlSzGX23ZTmpq', 'student');
+INSERT IGNORE INTO users (name, email, password_hash, role, department) VALUES
+('Aarav Patel',   'aarav@college.local',      '$2b$10$PwZW.jyRw1ox7MgXCezwWeoVvEOKCykxVc.wpUNhqlSzGX23ZTmpq', 'student', 'CSE'),
+('Priya Singh',   'priya@college.local',      '$2b$10$PwZW.jyRw1ox7MgXCezwWeoVvEOKCykxVc.wpUNhqlSzGX23ZTmpq', 'student', 'CSE'),
+('Rahul Kumar',   'rahul@college.local',      '$2b$10$PwZW.jyRw1ox7MgXCezwWeoVvEOKCykxVc.wpUNhqlSzGX23ZTmpq', 'student', 'CSE'),
+('Ananya Reddy',  'ananya@college.local',     '$2b$10$PwZW.jyRw1ox7MgXCezwWeoVvEOKCykxVc.wpUNhqlSzGX23ZTmpq', 'student', 'CSE'),
+('Vikram Joshi',  'vikram@college.local',     '$2b$10$PwZW.jyRw1ox7MgXCezwWeoVvEOKCykxVc.wpUNhqlSzGX23ZTmpq', 'student', 'CSE'),
+('Tanvi Shah',    'tanvi.aiml@college.local', '$2b$10$PwZW.jyRw1ox7MgXCezwWeoVvEOKCykxVc.wpUNhqlSzGX23ZTmpq', 'student', 'CSE(AIML)'),
+('Kunal Patil',   'kunal.aids@college.local', '$2b$10$PwZW.jyRw1ox7MgXCezwWeoVvEOKCykxVc.wpUNhqlSzGX23ZTmpq', 'student', 'AIDS');
 
 -- =====================================================
 -- Insert Student Profiles
 -- =====================================================
 
 INSERT IGNORE INTO students (user_id, roll_no, section, department, semester) VALUES
-((SELECT id FROM users WHERE email = 'aarav@college.local'),  'CS2024001', 'A', 'Computer Science', 4),
-((SELECT id FROM users WHERE email = 'priya@college.local'),  'CS2024002', 'A', 'Computer Science', 4),
-((SELECT id FROM users WHERE email = 'rahul@college.local'),  'CS2024003', 'B', 'Computer Science', 4),
-((SELECT id FROM users WHERE email = 'ananya@college.local'), 'CS2024004', 'B', 'Computer Science', 4),
-((SELECT id FROM users WHERE email = 'vikram@college.local'), 'CS2024005', 'A', 'Computer Science', 4);
+((SELECT id FROM users WHERE email = 'aarav@college.local'),      'CS2024001',   'A', 'CSE', 4),
+((SELECT id FROM users WHERE email = 'priya@college.local'),      'CS2024002',   'A', 'CSE', 4),
+((SELECT id FROM users WHERE email = 'rahul@college.local'),      'CS2024003',   'B', 'CSE', 4),
+((SELECT id FROM users WHERE email = 'ananya@college.local'),     'CS2024004',   'B', 'CSE', 4),
+((SELECT id FROM users WHERE email = 'vikram@college.local'),     'CS2024005',   'A', 'CSE', 4),
+((SELECT id FROM users WHERE email = 'tanvi.aiml@college.local'), 'AIML2024001', 'A', 'CSE(AIML)', 4),
+((SELECT id FROM users WHERE email = 'kunal.aids@college.local'), 'AIDS2024001', 'A', 'AIDS', 4);
 
 -- =====================================================
 -- Insert Sample Leave Applications
